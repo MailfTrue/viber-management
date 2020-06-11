@@ -1,5 +1,6 @@
 from django.contrib.admin import AdminSite
 from management.models import TaskEmployee, TaskReport, Employee
+from django.contrib.auth.admin import User, UserAdmin, Group, GroupAdmin
 from django.utils import timezone
 
 
@@ -85,3 +86,5 @@ class CustomAdminSite(AdminSite):
 
 
 site = CustomAdminSite()
+site.register(User, UserAdmin)
+# site.register(Group, GroupAdmin)
