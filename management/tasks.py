@@ -11,7 +11,7 @@ from viber import viber, DEFAULT_BUTTON, MIN_API_VERSION
 @app.task
 def send_tasks():
     now = timezone.localtime(timezone.now()).replace(second=0)
-    tasks = Task.objects.filter(start_date__gt=now, sent=False)
+    tasks = Task.objects.filter(start_date__lt=now, sent=False)
     for task in tasks:
         task.sent = True
         task.save()
