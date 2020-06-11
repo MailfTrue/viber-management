@@ -43,7 +43,7 @@ class Employee(models.Model):
     @property
     def dayoff_today(self):
         now = timezone.localtime(timezone.now())
-        return DayOff.objects.filter(start_date__lt=now, end_date__gt=now, employee=self).count() > 0
+        return DayOff.objects.filter(start_date__lt=now, end_date__gt=now, employee=self, confirmed=True).count() > 0
 
     @staticmethod
     def remember_employee_accept(sender, **kwargs):
