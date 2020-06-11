@@ -1,0 +1,68 @@
+{% extends 'admin/index.html' %}
+
+{% load static %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            {% for k in charts %}
+                const canvas_{{ forloop.counter }} = document.getElementById('myChart_{{ forloop.counter }}');
+                const ctx_{{ forloop.counter }} = canvas_{{ forloop.counter }}.getContext('2d');
+                let chart_{{ forloop.counter }} = new Chart(ctx_{{ forloop.counter }}, {
+                    type: 'pie',
+                    data: {
+                        datasets: [{
+                            data: [{% for i in k.data %}{{ i }}, {% endfor %}],
+                            backgroundColor: [{% for i in k.colors %}'{{ i }}', {% endfor %}],
+                        }],
+                        labels: [{% for i in k.labels.keys %}'{{ i }}', {% endfor %}]
+                    },
+                    options: {
+                        responsive: true
+                    }
+                });
+
+                canvas_{{ forloop.counter }}.onclick = function(e) {
+                   var slice = chart_{{ forloop.counter }}.getElementAtEvent(e);
+                   console.log('slice', slice);
+                   if (!slice.length) return; // return if not clicked on slice
+                   var label = slice[0]._model.label;
+                   console.log('label', label);
+                   switch (label) {
+                      {% for i in k.labels.items %}
+                          case '{{ i.0 }}':
+                             if ('{{ i.1 }}' !== '#')
+                                window.open('{{ i.1 }}');
+                             break;
+                      {% endfor %}
+                   }
+                };
+
+            {% endfor %}
+        });
+    </script>
+    <style>
+        .dashboard #content {
+            width: 100%;
+            max-width: 1000px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div id="charts" style="width: 100%; display: flex;">
+        {% for k in charts %}
+            <div style="width: {{ chart_width }}">
+                <canvas style="margin-bottom: 30px; width: 60%;"
+                        id="myChart_{{ forloop.counter }}"></canvas>
+            </div>
+        {% endfor %}
+    </div>
+    {{ block.super }}
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
