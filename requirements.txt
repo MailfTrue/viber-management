@@ -12,7 +12,7 @@ future==0.18.2
 idna==2.9
 importlib-metadata==1.6.0
 kombu==4.6.10
-Pillow==7.1.2
+Pillow==9.0.0
 pyTelegramBotAPI==3.7.1
 pytz==2020.1
 requests==2.23.0
